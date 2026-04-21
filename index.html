@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LibraTrack — Library Management System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="noise"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <span class="logo-icon">📚</span>
+      <span class="logo-text">LibraTrack</span>
+    </div>
+    <nav>
+      <button class="nav-btn active" onclick="showSection('dashboard')">
+        <span>🏠</span> Dashboard
+      </button>
+      <button class="nav-btn" onclick="showSection('books')">
+        <span>📖</span> Books
+      </button>
+      <button class="nav-btn" onclick="showSection('members')">
+        <span>👤</span> Members
+      </button>
+      <button class="nav-btn" onclick="showSection('borrow')">
+        <span>🔄</span> Borrow / Return
+      </button>
+      <button class="nav-btn" onclick="showSection('records')">
+        <span>📋</span> Records
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <p>Built by</p>
+      <p><strong>IT Student Portfolio</strong></p>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main">
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="section active">
+      <div class="page-header">
+        <h1>Dashboard</h1>
+        <p>Welcome back! Here's your library overview.</p>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card" style="--accent:#e8c97a">
+          <div class="stat-icon">📚</div>
+          <div class="stat-num" id="stat-books">0</div>
+          <div class="stat-label">Total Books</div>
+        </div>
+        <div class="stat-card" style="--accent:#7ab8e8">
+          <div class="stat-icon">👤</div>
+          <div class="stat-num" id="stat-members">0</div>
+          <div class="stat-label">Members</div>
+        </div>
+        <div class="stat-card" style="--accent:#7ae8a0">
+          <div class="stat-icon">🔄</div>
+          <div class="stat-num" id="stat-borrowed">0</div>
+          <div class="stat-label">Borrowed</div>
+        </div>
+        <div class="stat-card" style="--accent:#e87a7a">
+          <div class="stat-icon">⚠️</div>
+          <div class="stat-num" id="stat-overdue">0</div>
+          <div class="stat-label">Overdue</div>
+        </div>
+      </div>
+      <div class="recent-box">
+        <h2>Recent Activity</h2>
+        <div id="activity-feed" class="activity-feed">
+          <p class="empty-msg">No activity yet. Start by adding books or members!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOOKS -->
+    <section id="books" class="section">
+      <div class="page-header">
+        <h1>Book Catalog</h1>
+        <button class="btn-primary" onclick="openModal('add-book-modal')">+ Add New Book</button>
+      </div>
+      <input class="search-bar" type="text" placeholder="Search books by title or author..." oninput="searchBooks(this.value)" />
+      <div id="books-table-wrap">
+        <table class="data-table">
+          <thead><tr><th>#</th><th>Title</th><th>Author</th><th>Genre</th><th>Copies</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="books-tbody"></tbody>
+        </table>
+        <p class="empty-msg" id="no-books">No books added yet.</p>
+      </div>
+    </section>
+
+    <!-- MEMBERS -->
+    <section id="members" class="section">
+      <div class="page-header">
+        <h1>Members</h1>
+        <button class="btn-primary" onclick="openModal('add-member-modal')">+ Add Member</button>
+      </div>
+      <input class="search-bar" type="text" placeholder="Search members..." oninput="searchMembers(this.value)" />
+      <div>
+        <table class="data-table">
+          <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Books Borrowed</th><th>Actions</th></tr></thead>
+          <tbody id="members-tbody"></tbody>
+        </table>
+        <p class="empty-msg" id="no-members">No members added yet.</p>
+      </div>
+    </section>
+
+    <!-- BORROW / RETURN -->
+    <section id="borrow" class="section">
+      <div class="page-header">
+        <h1>Borrow & Return</h1>
+      </div>
+      <div class="borrow-grid">
+        <div class="form-card">
+          <h2>📤 Issue a Book</h2>
+          <label>Member</label>
+          <select id="borrow-member"><option value="">Select member...</option></select>
+          <label>Book</label>
+          <select id="borrow-book"><option value="">Select book...</option></select>
+          <label>Due Date</label>
+          <input type="date" id="borrow-due" />
+          <button class="btn-primary" onclick="borrowBook()">Issue Book</button>
+        </div>
+        <div class="form-card">
+          <h2>📥 Return a Book</h2>
+          <label>Select Borrow Record</label>
+          <select id="return-record"><option value="">Select record...</option></select>
+          <div id="return-info" class="return-info"></div>
+          <button class="btn-success" onclick="returnBook()">Mark as Returned</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- RECORDS -->
+    <section id="records" class="section">
+      <div class="page-header">
+        <h1>Borrow Records</h1>
+      </div>
+      <table class="data-table">
+        <thead><tr><th>#</th><th>Member</th><th>Book</th><th>Issued</th><th>Due</th><th>Returned</th><th>Status</th></tr></thead>
+        <tbody id="records-tbody"></tbody>
+      </table>
+      <p class="empty-msg" id="no-records">No borrow records yet.</p>
+    </section>
+
+  </main>
+
+  <!-- MODALS -->
+  <div class="modal-overlay" id="add-book-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Add New Book</h2>
+        <button class="modal-close" onclick="closeModal('add-book-modal')">✕</button>
+      </div>
+      <label>Title *</label>
+      <input type="text" id="book-title" placeholder="e.g. The Great Gatsby" />
+      <label>Author *</label>
+      <input type="text" id="book-author" placeholder="e.g. F. Scott Fitzgerald" />
+      <label>Genre</label>
+      <select id="book-genre">
+        <option>Fiction</option><option>Non-Fiction</option><option>Science</option>
+        <option>Technology</option><option>History</option><option>Biography</option><option>Other</option>
+      </select>
+      <label>Number of Copies</label>
+      <input type="number" id="book-copies" value="1" min="1" />
+      <label>ISBN</label>
+      <input type="text" id="book-isbn" placeholder="Optional" />
+      <button class="btn-primary" style="margin-top:1rem" onclick="addBook()">Add Book</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="add-member-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Add New Member</h2>
+        <button class="modal-close" onclick="closeModal('add-member-modal')">✕</button>
+      </div>
+      <label>Full Name *</label>
+      <input type="text" id="member-name" placeholder="e.g. Abebe Girma" />
+      <label>Email *</label>
+      <input type="email" id="member-email" placeholder="e.g. abebe@email.com" />
+      <label>Phone</label>
+      <input type="text" id="member-phone" placeholder="e.g. 0912345678" />
+      <label>Member Type</label>
+      <select id="member-type">
+        <option>Student</option><option>Teacher</option><option>Staff</option><option>Public</option>
+      </select>
+      <button class="btn-primary" style="margin-top:1rem" onclick="addMember()">Add Member</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
